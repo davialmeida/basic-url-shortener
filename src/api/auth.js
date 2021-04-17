@@ -1,10 +1,9 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
 const User = require('../models/user');
+const AuthService = require('../services/AuthService');
 
 router.post('/register', async (req, res) => {
   try {
@@ -29,29 +28,20 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
+  try {
+    const { email, password } = req.body;
 
-  if (!user) return res.status(400).json({ message: 'Email is wrong' });
+    const token = AuthService.authenticate(email, password);
 
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if (!validPassword) res.status(400).json({ error: 'Password is wrong' });
-
-  const token = jwt.sign(
-    // payload data
-    {
-      name: user.name,
-      email: user.email,
-      id: user._id,
-    },
-    process.env.TOKEN_SECRET
-  );
-
-  res.header('auth-token', token).json({
-    message: 'Login successful',
-    data: {
-      token,
-    },
-  });
+    res.header('auth-token', token).json({
+      message: 'Login successful',
+      data: {
+        token,
+      },
+    });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
 });
 
 module.exports = router;
