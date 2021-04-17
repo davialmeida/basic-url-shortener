@@ -9,9 +9,31 @@ function UserException(message) {
 
 const AuthService = {
   /**
+   * Create a user
+   * @param {String} name User name
+   * @param {String} email User email
+   * @param {String} password User password
+   */
+  async create(name, email, password) {
+    const isEmailExist = await User.findOne({ email });
+
+    if (isEmailExist) throw new UserException('Email exists');
+
+    const user = new User({
+      name,
+      email,
+      password
+    });
+
+    const savedUser = await user.save();
+
+    return savedUser;
+  },
+
+  /**
    * Authenticate user
-   * @param {String} email user email
-   * @param {String} password user password
+   * @param {String} email User email
+   * @param {String} password User password
    */
   async authenticate(email, password) {
     const user = await User.findOne({ email });

@@ -1,23 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-
-const User = require('../models/user');
 const AuthService = require('../services/AuthService');
 
 router.post('/register', async (req, res) => {
   try {
-    const isEmailExist = await User.findOne({ email: req.body.email });
-
-    if (isEmailExist) res.status(400).json({ error: 'Email already exists' });
-
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    });
-
-    const savedUser = await user.save();
+    const { name, email, password } = req.body;
+    const savedUser = await AuthService.create(name, email, password);
 
     res.json({ message: 'ok', data: savedUser });
   } catch (error) {
