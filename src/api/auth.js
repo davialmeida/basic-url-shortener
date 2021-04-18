@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const token = AuthService.authenticate(email, password);
+    const token = await AuthService.authenticate(email, password);
 
     res.header('auth-token', token).json({
       message: 'Login successful',
