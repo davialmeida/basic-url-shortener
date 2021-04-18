@@ -27,11 +27,81 @@ yarn run dev
 
 The REST API to the example app is described below.
 
+## Create a User
+
+### Request
+
+`POST /api/v1/user/register`
+
+    curl --request POST --url http://localhost:5000/api/v1/user/register --header 'content-type: application/json' --data '{
+      "name":"davi",
+      "email":"davi@teste.com",
+      "password":"davi151079"
+    }'
+
+### Successful Response
+
+    HTTP/1.1 200 OK
+    Date: Sun, Apr 18 2021 12:01:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 2
+
+    {
+      "message": "ok",
+      "data": {
+        "_id": "607c471820520407a9266e32",
+        "name": "davi",
+        "email": "teste@user.com",
+      }
+    }
+    
+### User exists Response
+
+    HTTP/1.1 400 Bad Request
+    Date: Sun, Apr 18 2021 12:01:24 GMT
+    Status: 400 Bad Request
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 50
+
+    {
+      "message": "Error unable to save user, try again"
+    }
+
+## Authenticate User
+
+### Request
+
+`POST /api/v1/user/login`
+
+    curl --request POST --url http://localhost:5000/api/v1/user/login --header 'content-type: application/json' --data '{
+      "email":"davi@teste.com",
+      "password":"davi151079"
+    }'
+
+### Successful Response
+
+    HTTP/1.1 200 OK
+    Date: Sun, Apr 18 2021 12:01:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 250
+
+    {
+      "message": "Login successful",
+      "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGF2aSIsImVtYWlsIjoiZGF2aUB0ZXN0ZS5jb20iLCJpZCI6IjYwNjBjZmEyYWQ5M2M0NzVkZTU2NmI0MyIsImlhdCI6MTYxODc1NzI5MX0.mJVDsnX4OdGYyuyP31-v_LqsfPQ6CbQOhjPNzplmNAY"
+      }
+    }
+    
 ## Create shortener url
 
 ### Request
 
-`POST /shorten/`
+`POST /api/v1/shorten`
 
     curl --request POST --url http://localhost:5000/api/v1/shorten --header 'authorization: Bearer YOUR_TOKEN' --header 'content-type: application/json' --data '{
 	    "domain": "foo.com.br",
@@ -41,7 +111,7 @@ The REST API to the example app is described below.
 ### Response
 
     HTTP/1.1 200 OK
-    Date: Thu, 24 Feb 2011 12:36:30 GMT
+    Date: Sun, Apr 18 2021 12:01:24 GMT
     Status: 200 OK
     Connection: close
     Content-Type: application/json
@@ -49,7 +119,7 @@ The REST API to the example app is described below.
 
     {
       "message": "success",
-      "short_url": "http://localhost/-NHfgDLp8a"
+      "short_url": "http://localhost:5000/-NHfgDLp8a"
     }
 
 ## Author
